@@ -2,10 +2,10 @@
 {
     public struct InUser
     {
-        private string m_userString;
+        private readonly string _userString;
         private InUser(string userString)
         {
-            m_userString = string.Format("--user {0} ", userString);
+            _userString = string.Format("--user {0} ", userString);
         }
 
         public static InUser All
@@ -39,7 +39,7 @@
 
         public override string ToString()
         {
-            return m_userString;
+            return _userString;
         }
     }
 }

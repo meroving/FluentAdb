@@ -21,7 +21,7 @@ namespace FluentAdb.Tests
                   "List of devices attached", 
                   "YT910X72U3	device"
             };
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(output);
             var adb = new Adb(processManager);
 

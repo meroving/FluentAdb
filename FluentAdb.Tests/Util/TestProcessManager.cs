@@ -10,11 +10,11 @@ using Rhino.Mocks;
 
 namespace FluentAdb.Tests.Util
 {
-    public class FakeProcessManager : IProcessManager
+    public class TestProcessManager : IProcessManager
     {
         private readonly IProcessManager _processManager;
 
-        public FakeProcessManager()
+        public TestProcessManager()
         {
             _processManager = MockRepository.GenerateStub<IProcessManager>();
         }

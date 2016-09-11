@@ -58,6 +58,11 @@ namespace FluentAdb
             get { return _adbExecutablePath; }
         }
 
+        public string Command
+        {
+            get { return AdbCommandBuilder.ToString(); }
+        }
+
         private Adb(Adb adb, string command, params object[] parameters)
         {
             _adbExecutablePath = adb._adbExecutablePath;
@@ -69,16 +74,17 @@ namespace FluentAdb
         }
 
         protected StringBuilder AdbCommandBuilder;
+        private string _command;
 
         #region IAdb
-        public IAdbTargeted SingleDevice()
+        public IAdbTargeted SingleDevice
         {
-            return new Adb(this, "-d");
+            get { return new Adb(this, "-d"); }
         }
 
-        public IAdbTargeted SingleEmulator()
+        public IAdbTargeted SingleEmulator
         {
-            return new Adb(this, "-e");
+            get { return new Adb(this, "-e"); }
         }
 
         public IAdbTargeted Target(string id)

@@ -15,14 +15,16 @@ namespace FluentAdb.Interfaces
         Task<string> Install(string path, InstallOptions options = InstallOptions.None, CancellationToken cancellationToken = default(CancellationToken));
         Task Uninstall(string package, UninstallOptions options = UninstallOptions.None, CancellationToken cancellationToken = default(CancellationToken));
         Task Clear(string package, CancellationToken cancellationToken = default(CancellationToken));
-        Task Enable(string package, CancellationToken cancellationToken = default(CancellationToken));
-        Task Disable(string package, CancellationToken cancellationToken = default(CancellationToken));
-        Task Grant(string permission, CancellationToken cancellationToken = default(CancellationToken));//TODO Enum of permissions
-        Task Revoke(string permission, CancellationToken cancellationToken = default(CancellationToken));//TODO Enum of permissions
+        Task Enable(string packageOrComponent, CancellationToken cancellationToken = default(CancellationToken));
+        Task Disable(string packageOrComponent, CancellationToken cancellationToken = default(CancellationToken));
+        Task DisableUser(string packageOrComponent, InUser user, CancellationToken cancellationToken = default(CancellationToken));
+        Task Grant(string package, string permission, CancellationToken cancellationToken = default(CancellationToken));
+        Task Revoke(string package, string permission, CancellationToken cancellationToken = default(CancellationToken));
         Task<InstallLocation> GetInstallLocation(CancellationToken cancellationToken = default(CancellationToken));
-        Task SetInstallLocation(CancellationToken cancellationToken = default(CancellationToken));
+        Task SetInstallLocation(InstallLocation installLocation, CancellationToken cancellationToken = default(CancellationToken));
+        Task SetPermissionEnforced(string permission, bool enforced, CancellationToken cancellationToken = default(CancellationToken));
         Task TrimCaches(int freeSpace, CancellationToken cancellationToken = default(CancellationToken));
-        Task CreateUser(string userId, CancellationToken cancellationToken = default(CancellationToken));
+        Task CreateUser(string userName, CancellationToken cancellationToken = default(CancellationToken));
         Task RemoveUser(string userId, CancellationToken cancellationToken = default(CancellationToken));
         Task<int> GetMaxUsers(CancellationToken cancellationToken = default(CancellationToken));
     }

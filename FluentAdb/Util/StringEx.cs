@@ -84,7 +84,7 @@ namespace FluentAdb.Util
                         return "\"" + s.Replace("\"", "\"\"") + "\"";
                 }
             }
-            if (s.Contains(DefaultEnvironment.NewLine))
+            if (s.Contains(Environment.NewLine))
                 return "\"" + s.Replace("\"", "\"\"") + "\"";
             return s;
         }
@@ -110,7 +110,7 @@ namespace FluentAdb.Util
         {
             if (s == null) throw new ArgumentNullException("s");
 
-            var newLine = DefaultEnvironment.NewLine;
+            var newLine = Environment.NewLine;
 
             if (newLine == "\n")
             {
@@ -138,7 +138,7 @@ namespace FluentAdb.Util
             }
 
             var exception = new NotSupportedException("Environment.NewLine has unsupported value");
-            exception.Data.Add("Environment.NewLine value", DefaultEnvironment.NewLine);
+            exception.Data.Add("Environment.NewLine value", Environment.NewLine);
             throw exception;
         }
 
@@ -154,7 +154,7 @@ namespace FluentAdb.Util
 
         public static IEnumerable<string> ToLines(this string s)
         {
-            return s.Split(new[] { DefaultEnvironment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            return s.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static string FromLines(this IEnumerable<string> lines)
@@ -163,7 +163,7 @@ namespace FluentAdb.Util
             if (!linesList.Any())
                 return string.Empty;
 
-            return string.Join(DefaultEnvironment.NewLine, linesList.ToArray()).Trim();
+            return string.Join(Environment.NewLine, linesList.ToArray()).Trim();
         }
 
         public static bool IsNullOrEmpty(this string s)

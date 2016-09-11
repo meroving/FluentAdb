@@ -24,7 +24,7 @@ namespace FluentAdb.Tests
                 "0123456789ABCDE\tunauthorized",
                 "0123456789ABCDE\toffline"
             };
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(output);
             var adb = new Adb(processManager);
 
@@ -48,7 +48,7 @@ namespace FluentAdb.Tests
                 "List of devices attached",
                 "0123456789ABCDE\tinvalidstate"
             };
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(output);
             var adb = new Adb(processManager);
 
@@ -65,7 +65,7 @@ namespace FluentAdb.Tests
         public async Task GetState(string[] output, AdbState state)
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(output);
             var adb = new Adb(processManager);
 

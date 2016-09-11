@@ -55,6 +55,7 @@
     <Compile Include="AdbActivity.cs" />
     <Compile Include="AdbDeviceInfo.cs" />
     <Compile Include="AdbDumpSys.cs" />
+    <Compile Include="AdbException.cs" />
     <Compile Include="AdbPackage.cs" />
     <Compile Include="AdbShell.cs" />
     <Compile Include="Enums\AdbState.cs" />

@@ -14,12 +14,12 @@ namespace FluentAdb.Tests
         public async Task SingleDevice()
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[] { "Some output" });
-            var adb =  new Adb(processManager);
+            var adb = new Adb(processManager);
 
             // act
-            var deviceAdb = adb.SingleDevice();
+            var deviceAdb = adb.SingleDevice;
             await deviceAdb.RunCommand("test");
 
             // assert
@@ -30,12 +30,12 @@ namespace FluentAdb.Tests
         public async Task SingleEmulator()
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[] { "Some output" });
             var adb = new Adb(processManager);
 
             // act
-            var deviceAdb = adb.SingleEmulator();
+            var deviceAdb = adb.SingleEmulator;
             await deviceAdb.RunCommand("test");
 
             // assert
@@ -47,7 +47,7 @@ namespace FluentAdb.Tests
         {
             // arrange
             const string id = "Device ID";
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[] { "Some output" });
             var adb = new Adb(processManager);
 
@@ -66,12 +66,12 @@ namespace FluentAdb.Tests
         public async Task Install(InstallOptions options, string expected)
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[] { "Success" });
             var adb = new Adb(processManager);
 
             // act
-            var deviceAdb = adb.SingleDevice();
+            var deviceAdb = adb.SingleDevice;
             await deviceAdb.Install("test.apk", options);
 
             // assert
@@ -84,12 +84,12 @@ namespace FluentAdb.Tests
         public async Task InstallResult(string output, string expected)
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[] { "3584 KB/s (69747 bytes in 0.019s)", "        pkg: /data/local/tmp/LocaleChanger.apk", output });
             var adb = new Adb(processManager);
 
             // act
-            var deviceAdb = adb.SingleDevice();
+            var deviceAdb = adb.SingleDevice;
             var result = await deviceAdb.Install("test.apk");
 
             // assert
@@ -108,12 +108,12 @@ namespace FluentAdb.Tests
         public async Task Backup(BackupOptions options, string expected)
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[] { "Success" });
             var adb = new Adb(processManager);
 
             // act
-            var deviceAdb = adb.SingleDevice();
+            var deviceAdb = adb.SingleDevice;
             await deviceAdb.Backup(options);
 
             // assert

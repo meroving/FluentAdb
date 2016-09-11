@@ -2,8 +2,8 @@
 {
     public enum InstallLocation
     {
-        Auto,
-        Internal,
-        External
+        Auto = 0,
+        Internal = 1,
+        External = 2
     }
 }

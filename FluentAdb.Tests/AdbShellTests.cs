@@ -11,7 +11,7 @@ namespace FluentAdb.Tests
         public async Task GetAllProperties()
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[]
             {
                 "[ro.product.brand]: [Philips]",
@@ -22,7 +22,7 @@ namespace FluentAdb.Tests
             var adb = new Adb(processManager);
 
             // act
-            var result = await adb.SingleDevice().Shell.GetAllProperties();
+            var result = await adb.SingleDevice.Shell.GetAllProperties();
 
             // assert
             Assert.AreEqual("Philips", result["ro.product.brand"]);
@@ -34,12 +34,12 @@ namespace FluentAdb.Tests
         public async Task GetProperty()
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[] { " ap0 " });
             var adb = new Adb(processManager);
 
             // act
-            var result = await adb.SingleDevice().Shell.GetProperty("test.property");
+            var result = await adb.SingleDevice.Shell.GetProperty("test.property");
 
             // assert
             Assert.AreEqual("ap0", result);
@@ -49,12 +49,12 @@ namespace FluentAdb.Tests
         public async Task GetPropertyNull()
         {
             // arrange
-            var processManager = new FakeProcessManager();
+            var processManager = new TestProcessManager();
             processManager.AddProcess(new[] { "  " });
             var adb = new Adb(processManager);
 
             // act
-            var result = await adb.SingleDevice().Shell.GetProperty("test.property");
+            var result = await adb.SingleDevice.Shell.GetProperty("test.property");
 
             // assert
             Assert.IsNull(result);
