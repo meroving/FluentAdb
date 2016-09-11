@@ -20,29 +20,31 @@ namespace FluentAdb
     {
         private readonly IProcessManager _processManager;
 
-        public static void SetMainAdbPath(string adbPath)
-        {
-            if (!File.Exists(adbPath))
-                throw new ArgumentException("Adb not exists at this path");
-
-            MainAdbPath = adbPath;
-        }
-
-        public static string MainAdbPath;
-        private readonly string _adbPath;
+        private readonly string _adbExecutablePath;
 
         public Adb()
         {
             AdbCommandBuilder = new StringBuilder();
             _processManager = new ProcessManager();
+            var androidSdkPath = Environment.GetEnvironmentVariable("ANDROID_HOME");
+            if (androidSdkPath != null)
+            {
+                _adbExecutablePath = Path.Combine(androidSdkPath, "platform-tools");
+            }
+        }
+
+        public Adb(string adbPath)
+        {
+            AdbCommandBuilder = new StringBuilder();
+            _processManager = new ProcessManager();
+            _adbExecutablePath = adbPath;
         }
 
         internal Adb(IProcessManager processManager)
+            : this()
         {
-            AdbCommandBuilder = new StringBuilder();
             _processManager = processManager;
         }
-
 
         public IAdb Clone(string externalAdbPath = null)
         {
@@ -51,14 +53,14 @@ namespace FluentAdb
             return clonedAdb;
         }
 
-        public string FilePath
+        public string AdbExecutablePath
         {
-            get { return _adbPath ?? MainAdbPath; }
+            get { return _adbExecutablePath; }
         }
 
         private Adb(Adb adb, string command, params object[] parameters)
         {
-            _adbPath = adb._adbPath;
+            _adbExecutablePath = adb._adbExecutablePath;
             _processManager = adb._processManager;
 
             AdbCommandBuilder = new StringBuilder(adb.AdbCommandBuilder.ToString());
@@ -95,7 +97,7 @@ namespace FluentAdb
             {
                 string formatString = format == LogOutputFormat.Brief ? string.Empty : string.Format("-v {0}", format.ToString().ToLower());
                 string filtersString = filters.Aggregate("", (acc, f) => acc + " " + f.ToString());
-                var process = new Adb(this, "logcat {0} {1} {2}", options.GenerateString(), formatString, filtersString).CreateProcess(FilePath, cts, 0, false);
+                var process = new Adb(this, "logcat {0} {1} {2}", options.GenerateString(), formatString, filtersString).CreateProcess(AdbExecutablePath, cts, 0, false);
                 process.RunAsync(cts.Token);
                 return process.Output;
             }
@@ -199,22 +201,14 @@ namespace FluentAdb
         }
 
 
-        public static async Task StartServer(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task StartServer(CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
-            {
-                var process = new Adb(new Adb(), "start-server").CreateProcess(MainAdbPath, cts, 0);
-                await process.RunAsync(cancellationToken).ConfigureAwait(false);
-            }
+            await new Adb(new Adb(), "start-server").RunAsync(0, cancellationToken);
         }
 
-        public static async Task StopServer(IProcessManager processManager, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task StopServer(IProcessManager processManager, CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
-            {
-                var process = new Adb(new Adb(), "kill-server").CreateProcess(MainAdbPath, cts, 0);
-                await process.RunAsync(cancellationToken).ConfigureAwait(false);
-            }
+            await new Adb(new Adb(), "kill-server").RunAsync(0, cancellationToken);
         }
 
         public async Task Backup(BackupOptions options = BackupOptions.None, IEnumerable<string> packages = null, string backupFile = null, CancellationToken cancellationToken = default(CancellationToken))
@@ -234,7 +228,7 @@ namespace FluentAdb
         {
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
             {
-                var process = new Adb(this, "restore {0}", backupFile.QuoteIfNeeded()).CreateProcess(FilePath, cts, 0, false);
+                var process = new Adb(this, "restore {0}", backupFile.QuoteIfNeeded()).CreateProcess(AdbExecutablePath, cts, 0, false);
                 IDisposable subscription = null;
                 if (outputHandler != null)
                 {
@@ -300,7 +294,7 @@ namespace FluentAdb
         {
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
             {
-                var result = await CreateProcess(FilePath, cts, timeout).RunAsync(cts.Token).ConfigureAwait(false);
+                var result = await CreateProcess(AdbExecutablePath, cts, timeout).RunAsync(cts.Token).ConfigureAwait(false);
 
                 if (result.Process.ExitCode != 0)
                 {

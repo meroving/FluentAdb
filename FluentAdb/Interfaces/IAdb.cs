@@ -16,6 +16,6 @@ namespace FluentAdb.Interfaces
         Task<bool> ConnectWiFiDevice(IPAddress ipAdress, CancellationToken cancellationToken = default(CancellationToken));
         Task<string> Version(CancellationToken cancellationToken = default(CancellationToken));
         IAdb Clone(string externalAdbPath = null);
-        string FilePath { get; }
+        string AdbExecutablePath { get; }
     }
 }
