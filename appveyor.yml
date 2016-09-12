@@ -33,10 +33,10 @@
     verbosity: minimal
 
   after_build:
-  - ps: nuget pack FluentAdb/FluentAdb.nuspec -version "$env:PackageVersion"
+  - ps: nuget pack FluentAdb/FluentAdb.csproj.nuspec -version "$env:PackageVersion"
 
   artifacts:
-  - path: 'FluentAdb*.nupkg'
+  - path: '**\FluentAdb*.nupkg'
     name: fluentadb-nuget-package
 
   deploy:
