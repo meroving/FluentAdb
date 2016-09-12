@@ -1,0 +1,35 @@
+version: 0.1.0.{build}
+configuration: Release
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+environment:
+  packageVersion: 0.1.0
+nuget:
+  account_feed: true
+  project_feed: true
+  disable_publish_on_pr: true
+before_build:
+- ps: nuget restore
+build:
+  verbosity: minimal
+artifacts:
+- path: '*.nupkg'
+  name: nuget package
+deploy:
+- provider: NuGet
+  api_key:
+    secure: 6ww5vr82trvpkyjsrxrv07f1
+  artifact: '*.nupkg'
+  on:
+    branch: master
+on_success:
+- ps: >-
+    $releaseVersion= $env:packageVersion
+
+    $buildNumber = $env:APPVEYOR_BUILD_NUMBER
+
+    nuget pack FluentAdb\FluentAdb.csproj.nuspec -version $releaseVersion
