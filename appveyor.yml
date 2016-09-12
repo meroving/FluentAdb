@@ -43,11 +43,11 @@
   - path: '**\FluentAdb*.nupkg'
     name: fluentadb-nuget-package
 
-  # deploy:
-  # - provider: NuGet
-  #   api_key:
-  #     secure: Q2MFsjBTRxzvwmcXs9s850JeRJFORfGuBcmDh9RUAMDYDxTOODahB0kVkX4p04xo
-  #   artifact: fluentadb-nuget-package
+  deploy:
+  - provider: NuGet
+    api_key:
+      secure: Q2MFsjBTRxzvwmcXs9s850JeRJFORfGuBcmDh9RUAMDYDxTOODahB0kVkX4p04xo
+    artifact: fluentadb-nuget-package
 
   # notifications:
   # - provider: Webhook
