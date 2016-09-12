@@ -31,6 +31,7 @@
 
   build:
     verbosity: minimal
+    publish_nuget: true
 
   after_build:
   - ps: nuget pack FluentAdb/FluentAdb.csproj.nuspec -version "$env:PackageVersion"
