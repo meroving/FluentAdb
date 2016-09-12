@@ -1,35 +1,53 @@
-version: 0.1.0.{build}
-configuration: Release
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
-environment:
-  packageVersion: 0.1.0
-nuget:
-  account_feed: true
-  project_feed: true
-  disable_publish_on_pr: true
-before_build:
-- ps: nuget restore
-build:
-  verbosity: minimal
-artifacts:
-- path: '*.nupkg'
-  name: nuget package
-deploy:
-- provider: NuGet
-  api_key:
-    secure: 6ww5vr82trvpkyjsrxrv07f1
-  artifact: '*.nupkg'
-  on:
-    branch: master
-on_success:
-- ps: >-
-    $releaseVersion= $env:packageVersion
+# master branch
+# compile, test, release to nuget
+-
+  branches:
+    only:
+    - master
 
-    $buildNumber = $env:APPVEYOR_BUILD_NUMBER
+  version: 1.0.{build}
 
-    nuget pack FluentAdb\FluentAdb.csproj.nuspec -version $releaseVersion
+  init:
+  - ps: |
+      $version = new-object System.Version $env:APPVEYOR_BUILD_VERSION
+      $env:PackageVersion = "{0}.{1}.{2}" -f $version.Major, $version.Minor, $version.Build
+
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '$(APPVEYOR_BUILD_VERSION)'
+    assembly_file_version: '$(APPVEYOR_BUILD_VERSION)'
+    assembly_informational_version: '$(APPVEYOR_BUILD_VERSION)'
+
+  configuration: Release
+
+  nuget:
+    account_feed: true
+    project_feed: true
+    disable_publish_on_pr: true
+
+  before_build:
+  - nuget restore
+
+  build:
+    verbosity: minimal
+
+  after_build:
+  - ps: nuget pack FluentAdb/FluentAdb.nuspec -version "$env:PackageVersion"
+
+  artifacts:
+  - path: 'FluentAdb*.nupkg'
+    name: fluentadb-nuget-package
+
+  deploy:
+  - provider: NuGet
+    api_key:
+      secure: xk84qh7+ERRhQigMeqULW/Wnx7lLtMtrsQ2M3/HXPz4=
+    artifact: fluentadb-nuget-package
+
+  # notifications:
+  # - provider: Webhook
+  #   url: https://webhooks.gitter.im/e/3712526962bd70e49d63
+  #   on_build_failure: true
+  #   on_build_success: true
+  #   on_build_status_changed: true
