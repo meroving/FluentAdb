@@ -35,6 +35,9 @@
   after_build:
   - ps: nuget pack FluentAdb/FluentAdb.csproj.nuspec -version "$env:PackageVersion"
 
+  after_test:
+  - bash <(curl -s https://codecov.io/bash)
+
   artifacts:
   - path: '**\FluentAdb*.nupkg'
     name: fluentadb-nuget-package
