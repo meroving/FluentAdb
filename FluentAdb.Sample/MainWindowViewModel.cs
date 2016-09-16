@@ -1,27 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FluentAdb.Enums;
+using FluentAdb.Interfaces;
+using JetBrains.Annotations;
+using Microsoft.Win32;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using FluentAdb.Enums;
-using FluentAdb.Interfaces;
-using JetBrains.Annotations;
-using Microsoft.Win32;
 
 namespace FluentAdb.Sample
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-
         private readonly IAdb _adb;
         private IAdbTargeted _deviceAdb;
+        private string _deviceName;
+
         public MainWindowViewModel()
         {
             DeviceName = "Not connected";
@@ -40,28 +39,32 @@ namespace FluentAdb.Sample
             }
         }
 
-        private async Task InstallApp(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (await _deviceAdb.GetState(cancellationToken) != AdbState.Device)
-            {
-                MessageBox.Show("Device is disconnected. Can't install app");
-            }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            OpenFileDialog ofd = new OpenFileDialog { Filter = "Apk files|*.apk" };
-            if (ofd.ShowDialog() == true)
+        public ICommand ConnectCommand { get; set; }
+
+        public string DeviceName
+        {
+            get { return _deviceName; }
+            set
             {
-                var apkFilePath = ofd.FileName;
-                var installationResult =
-                    await _deviceAdb.Install(apkFilePath, InstallOptions.ReinstallKeepingData, cancellationToken);
-                if (installationResult == InstallationResult.Success)
-                {
-                    MessageBox.Show("Application installed successfully");
-                }
-                else
-                {
-                    MessageBox.Show("Application installation failed. Error: " + installationResult);
-                }
+                if (value == _deviceName) return;
+                _deviceName = value;
+                OnPropertyChanged();
             }
+        }
+
+        public ICommand InstallCommand { get; set; }
+
+        public ObservableCollection<string> Logcat { get; set; }
+
+        public ObservableCollection<Parameter> Parameters { get; set; }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private async Task Connect(CancellationToken cancellationToken = default(CancellationToken))
@@ -97,32 +100,28 @@ namespace FluentAdb.Sample
                 });
         }
 
-        public ObservableCollection<Parameter> Parameters { get; set; }
-        public ObservableCollection<string> Logcat { get; set; }
-
-        public ICommand ConnectCommand { get; set; }
-        public ICommand InstallCommand { get; set; }
-
-        private string _deviceName;
-
-        public string DeviceName
+        private async Task InstallApp(CancellationToken cancellationToken = default(CancellationToken))
         {
-            get { return _deviceName; }
-            set
+            if (await _deviceAdb.GetState(cancellationToken) != AdbState.Device)
             {
-                if (value == _deviceName) return;
-                _deviceName = value;
-                OnPropertyChanged();
+                MessageBox.Show("Device is disconnected. Can't install app");
             }
-        }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            OpenFileDialog ofd = new OpenFileDialog { Filter = "Apk files|*.apk" };
+            if (ofd.ShowDialog() == true)
+            {
+                var apkFilePath = ofd.FileName;
+                var installationResult =
+                    await _deviceAdb.Install(apkFilePath, InstallOptions.ReinstallKeepingData, cancellationToken);
+                if (installationResult == InstallationResult.Success)
+                {
+                    MessageBox.Show("Application installed successfully");
+                }
+                else
+                {
+                    MessageBox.Show("Application installation failed. Error: " + installationResult);
+                }
+            }
         }
     }
 }
