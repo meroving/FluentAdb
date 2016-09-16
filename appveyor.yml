@@ -48,6 +48,17 @@
     api_key:
       secure: Q2MFsjBTRxzvwmcXs9s850JeRJFORfGuBcmDh9RUAMDYDxTOODahB0kVkX4p04xo
     artifact: fluentadb-nuget-package
+    on:
+      branch: master                 # release from master branch only
+      appveyor_repo_tag: true 
+
+  - provider: GitHub
+    artifact: /.**\FluentAdb*.nupkg/           # upload all NuGet packages to release assets
+    draft: false
+    prerelease: false
+    on:
+      branch: master                # release from master branch only
+      appveyor_repo_tag: true       # deploy on tag push only
 
   # notifications:
   # - provider: Webhook
