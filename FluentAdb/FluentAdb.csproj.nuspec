@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/meroving/FluentAdb</projectUrl>
     <iconUrl>https://github.com/meroving/FluentAdb/blob/master/images/logo.png?raw=true</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Simple and elegant SDK fo Android Debug Bridge</description>
+    <description>Simple and elegant SDK for Android Debug Bridge</description>
     <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>Android ADB </tags>

@@ -31,6 +31,11 @@ namespace FluentAdb
             {
                 _adbExecutablePath = Path.Combine(androidSdkPath, "platform-tools");
             }
+
+            if (!File.Exists(_adbExecutablePath))
+            {
+                throw new AdbException("Adb executable not found", this);
+            }
         }
 
         public Adb(string adbPath)
@@ -38,6 +43,10 @@ namespace FluentAdb
             AdbCommandBuilder = new StringBuilder();
             _processManager = new ProcessManager();
             _adbExecutablePath = adbPath;
+            if (!File.Exists(_adbExecutablePath))
+            {
+                throw new AdbException("Adb executable not found", this);
+            }
         }
 
         internal Adb(IProcessManager processManager)
