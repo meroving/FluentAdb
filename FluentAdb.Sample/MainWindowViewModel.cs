@@ -108,6 +108,7 @@ namespace FluentAdb.Sample
             }
 
             OpenFileDialog ofd = new OpenFileDialog { Filter = "Apk files|*.apk" };
+            
             if (ofd.ShowDialog() == true)
             {
                 var apkFilePath = ofd.FileName;
