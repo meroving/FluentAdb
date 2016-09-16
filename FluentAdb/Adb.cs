@@ -24,7 +24,6 @@ namespace FluentAdb
 
         public Adb()
         {
-            AdbCommandBuilder = new StringBuilder();
             _processManager = new ProcessManager();
             var androidSdkPath = Environment.GetEnvironmentVariable("ANDROID_HOME");
             if (androidSdkPath != null)
@@ -40,7 +39,6 @@ namespace FluentAdb
 
         public Adb(string adbPath)
         {
-            AdbCommandBuilder = new StringBuilder();
             _processManager = new ProcessManager();
             _adbExecutablePath = adbPath;
             if (!File.Exists(_adbExecutablePath))
@@ -50,7 +48,6 @@ namespace FluentAdb
         }
 
         internal Adb(IProcessManager processManager)
-            : this()
         {
             _processManager = processManager;
         }
@@ -82,8 +79,7 @@ namespace FluentAdb
             AdbCommandBuilder.AppendFormat(command, parameters);
         }
 
-        protected StringBuilder AdbCommandBuilder;
-        private string _command;
+        protected StringBuilder AdbCommandBuilder = new StringBuilder();
 
         #region IAdb
         public IAdbTargeted SingleDevice
