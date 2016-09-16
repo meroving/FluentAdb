@@ -53,6 +53,8 @@
       appveyor_repo_tag: true 
 
   - provider: GitHub
+    api_key:
+      secure: R1G4RaSGXWdhWx85IcLSECRh5D9pt61oTJM2gV1ep3KLO3PWi3GXrshlPjsFkefV
     artifact: /.**\FluentAdb*.nupkg/           # upload all NuGet packages to release assets
     draft: false
     prerelease: false
