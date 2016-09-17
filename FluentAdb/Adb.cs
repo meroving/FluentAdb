@@ -117,6 +117,10 @@ namespace FluentAdb
             }
         }
 
+        /// <summary>
+        /// Get new adb instance
+        /// </summary>
+        /// <returns></returns>
         public static IAdb Get()
         {
             return new Adb();
@@ -126,12 +130,7 @@ namespace FluentAdb
         {
             return new Adb(adbPath);
         }
-        public IAdb Clone(string externalAdbPath = null)
-        {
-            var clonedAdb = new Adb();
 
-            return clonedAdb;
-        }
         #region IAdb
         public IAdbTargeted SingleDevice
         {
@@ -143,9 +142,9 @@ namespace FluentAdb
             get { return new Adb(this, "-e"); }
         }
 
-        public IAdbTargeted Target(string id)
+        public IAdbTargeted Target(string serialNumber)
         {
-            return new Adb(this, "-s \"{0}\"", id);
+            return new Adb(this, "-s \"{0}\"", serialNumber);
         }
         #endregion
 
@@ -264,6 +263,7 @@ namespace FluentAdb
                 return process.Output;
             }
         }
+
         public async Task<string> Pull(string remotePath, string localPath, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await new Adb(this, "pull \"{0}\" \"{1}\"", remotePath, localPath).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -294,18 +294,19 @@ namespace FluentAdb
 
         public async Task StartServer(CancellationToken cancellationToken = default(CancellationToken))
         {
-            await new Adb(new Adb(), "start-server").RunAsync(0, cancellationToken);
+            await new Adb(this, "start-server").RunAsync(0, cancellationToken);
         }
 
-        public async Task StopServer(IProcessManager processManager, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task StopServer(CancellationToken cancellationToken = default(CancellationToken))
         {
-            await new Adb(new Adb(), "kill-server").RunAsync(0, cancellationToken);
+            await new Adb(this, "kill-server").RunAsync(0, cancellationToken);
         }
 
         public async Task<string> Version(CancellationToken cancellationToken = default(CancellationToken))
         {
             return await new Adb(this, "version").RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
+
         private int GetTimeoutByFileSize(string apkPath)
         {
             var fileInfo = new FileInfo(apkPath);
