@@ -18,11 +18,15 @@ namespace FluentAdb
 {
     public partial class Adb : IAdb, IAdbTargeted
     {
-        private readonly IProcessManager _processManager;
-
+        protected StringBuilder AdbCommandBuilder = new StringBuilder();
         private readonly string _adbExecutablePath;
+        private readonly IProcessManager _processManager;
+        internal Adb(IProcessManager processManager)
+        {
+            _processManager = processManager;
+        }
 
-        public Adb()
+        private Adb()
         {
             _processManager = new ProcessManager();
             var androidSdkPath = Environment.GetEnvironmentVariable("ANDROID_HOME");
@@ -37,7 +41,7 @@ namespace FluentAdb
             }
         }
 
-        public Adb(string adbPath)
+        private Adb(string adbPath)
         {
             _processManager = new ProcessManager();
             _adbExecutablePath = adbPath;
@@ -45,28 +49,6 @@ namespace FluentAdb
             {
                 throw new AdbException("Adb executable not found", this);
             }
-        }
-
-        internal Adb(IProcessManager processManager)
-        {
-            _processManager = processManager;
-        }
-
-        public IAdb Clone(string externalAdbPath = null)
-        {
-            var clonedAdb = new Adb();
-
-            return clonedAdb;
-        }
-
-        public string AdbExecutablePath
-        {
-            get { return _adbExecutablePath; }
-        }
-
-        public string Command
-        {
-            get { return AdbCommandBuilder.ToString(); }
         }
 
         private Adb(Adb adb, string command, params object[] parameters)
@@ -79,255 +61,15 @@ namespace FluentAdb
             AdbCommandBuilder.AppendFormat(command, parameters);
         }
 
-        protected StringBuilder AdbCommandBuilder = new StringBuilder();
-
-        #region IAdb
-        public IAdbTargeted SingleDevice
+        public string AdbExecutablePath
         {
-            get { return new Adb(this, "-d"); }
+            get { return _adbExecutablePath; }
         }
 
-        public IAdbTargeted SingleEmulator
+        public string Command
         {
-            get { return new Adb(this, "-e"); }
+            get { return AdbCommandBuilder.ToString(); }
         }
-
-        public IAdbTargeted Target(string id)
-        {
-            return new Adb(this, "-s \"{0}\"", id);
-        }
-        #endregion
-
-        #region IAdbTargeted
-
-        public IObservable<string> Logcat(LogcatOptions options = LogcatOptions.None,
-            LogOutputFormat format = LogOutputFormat.Brief,
-            CancellationToken cancellationToken = default(CancellationToken), params LogFilter[] filters)
-        {
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
-            {
-                string formatString = format == LogOutputFormat.Brief ? string.Empty : string.Format("-v {0}", format.ToString().ToLower());
-                string filtersString = filters.Aggregate("", (acc, f) => acc + " " + f.ToString());
-                var process = new Adb(this, "logcat {0} {1} {2}", options.GenerateString(), formatString, filtersString).CreateProcess(AdbExecutablePath, cts, 0, false);
-                process.RunAsync(cts.Token);
-                return process.Output;
-            }
-        }
-
-        public IShell Shell
-        {
-            get
-            {
-                return new Adb(this, "shell");
-            }
-        }
-
-        public async Task<IEnumerable<IDeviceInfo>> GetDevices(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var lines = (await new Adb(this, "devices").RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false)).ToLines().ToList();
-            if (!lines.Any())
-            {
-                return new List<IDeviceInfo>();
-            }
-            lines.RemoveRange(0, 1);
-            return lines.Select(l => new AdbDeviceInfo(l));
-        }
-
-        public async Task<string> Version(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await new Adb(this, "version").RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<string> Install(string apkPath, InstallOptions options = InstallOptions.None, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            int timeout = GetTimeoutByFileSize(apkPath);
-            var output = await new Adb(this, "install {0} {1}", options.GenerateString(), apkPath.ExceptionQuoteIfNeeded())
-                .RunAsync(timeout, cancellationToken: cancellationToken).ConfigureAwait(false);
-            if (!output.Contains("Error:") && !output.Contains("Failure"))
-            {
-                return InstallationResult.Success;
-            }
-            else
-            {
-                try
-                {
-                    var lines = output.ToLines();
-                    string failureLine = lines.FirstOrDefault(l => l.Contains("Failure"));
-                    if (failureLine == null)
-                        return InstallationResult.InstallParseFailedUnexpectedException;
-                    int length = "Failure".Length;
-                    failureLine = failureLine.Substring(length, failureLine.Length - length).Trim(' ', '[', ']');
-
-                    return failureLine;
-
-                }
-                catch (Exception)
-                {
-                    return InstallationResult.InstallParseFailedUnexpectedException;
-                }
-            }
-        }
-
-        private int GetTimeoutByFileSize(string apkPath)
-        {
-            var fileInfo = new FileInfo(apkPath);
-            if (fileInfo.Exists)
-            {
-                long dataSize = new FileInfo(apkPath).Length;
-                int m10Size = (int)Math.Ceiling(dataSize / (1024.0 * 1024.0 * 10));
-
-                return m10Size * 60000;
-            }
-            return 10 * 60000;
-        }
-
-        public async Task<string> Pull(string remotePath, string localPath, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await new Adb(this, "pull \"{0}\" \"{1}\"", remotePath, localPath).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<string> GetScreenshot(string file, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await new Adb(this, "shell screencap -p \"{0}\"", file).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<string> Push(string localPath, string remotePath, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await new Adb(this, "push {0} {1}", localPath.QuoteIfNeeded(), remotePath.QuoteIfNeeded()).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<AdbState> GetState(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var lines = (await new Adb(this, "get-state").RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false)).ToLines().ToList();
-
-            if (!lines.Any())
-                return AdbState.Unknown;
-            if (lines.Contains("device"))
-                return AdbState.Device;
-            else if (lines.Contains("offline"))
-                return AdbState.Offline;
-            else if (lines.Contains("bootloader"))
-                return AdbState.Bootloader;
-            else return AdbState.Unknown;
-        }
-
-
-        public async Task StartServer(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await new Adb(new Adb(), "start-server").RunAsync(0, cancellationToken);
-        }
-
-        public async Task StopServer(IProcessManager processManager, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await new Adb(new Adb(), "kill-server").RunAsync(0, cancellationToken);
-        }
-
-        public async Task Backup(BackupOptions options = BackupOptions.None, IEnumerable<string> packages = null, string backupFile = null, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            string fileString = backupFile != null ? string.Format("-f {0}", backupFile.QuoteIfNeeded()) : "";
-            string packagesString = "";
-            if (packages != null)
-            {
-                packagesString = packages.Aggregate("", (acc, p) => acc + " " + p);
-            }
-
-            await new Adb(this, "backup {0} {1} {2}", fileString, options.GenerateString(), packagesString).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        }
-
-        public async Task Restore(string backupFile, Action<string> outputHandler, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
-            {
-                var process = new Adb(this, "restore {0}", backupFile.QuoteIfNeeded()).CreateProcess(AdbExecutablePath, cts, 0, false);
-                IDisposable subscription = null;
-                if (outputHandler != null)
-                {
-                    subscription = process.Output.Subscribe(outputHandler);
-                }
-                await process.RunAsync(cancellationToken);
-                if (subscription != null)
-                {
-                    subscription.Dispose();
-                }
-            }
-        }
-
-        public async Task<bool> ConnectWiFiDevice(IPAddress ipAdress, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            try
-            {
-                var lines = (await new Adb(this, "connect {0}", ipAdress.ToString()).RunAsync(cancellationToken: cancellationToken)).ToLines().ToList();
-
-                if (!lines.Any() || lines.First().Contains("unable"))
-                {
-                    return false;
-                }
-                return true;
-            }
-            catch (NonZeroExitCodeException)
-            {
-                return false;
-            }
-        }
-        #endregion
-
-        #region Tools
-        private string GetUserString(InUser? user)
-        {
-            return user.HasValue ? user.ToString() : "";
-        }
-
-        private IProcess CreateProcess(string adbPath, CancellationTokenSource cts, int timeout = 1000 * 60 * 10, bool cacheOutput = true)
-        {
-            string commands = AdbCommandBuilder.ToString().Trim();
-            var processManager = _processManager ?? new ProcessManager();
-            var process = processManager.CreateProcess(adbPath, commands);
-            process.Output.Buffer(TimeSpan.FromSeconds(1)).Subscribe(
-                outputChunk =>
-                {
-                    if (outputChunk.Any(s => s.Contains("error: device not found")))
-                        cts.Cancel();
-                });
-
-            if (timeout != 0)
-            {
-                cts.CancelAfter(timeout);
-            }
-            if (cacheOutput)
-            {
-                process = process.WithOutputCache();
-            }
-            return process;
-        }
-
-        private async Task<string> RunAsync(int timeout = 1000 * 60 * 10, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
-            {
-                var result = await CreateProcess(AdbExecutablePath, cts, timeout).RunAsync(cts.Token).ConfigureAwait(false);
-
-                if (result.Process.ExitCode != 0)
-                {
-                    throw new NonZeroExitCodeException(result.Process.ExitCode, result.Process.StartInfo, result.Output.FromLines());
-                }
-
-                return IgnoreDaemonRestarting(result.Output.ToList());
-            }
-        }
-
-        private static string IgnoreDaemonRestarting(List<string> lines)
-        {
-            if (lines.Count > 2
-                && (lines[0].StartsWith("* daemon not running. starting it now on port")
-                    || lines[0].StartsWith("adb server is out of date.  killing..."))
-                && lines[1].Equals("* daemon started successfully *"))
-            {
-                lines.RemoveRange(0, 2);
-            }
-            return lines.FromLines();
-        }
-        #endregion
 
         public static void Die()
         {
@@ -374,5 +116,264 @@ namespace FluentAdb
                 }
             }
         }
+
+        public static IAdb Get()
+        {
+            return new Adb();
+        }
+
+        public static IAdb Get(string adbPath)
+        {
+            return new Adb(adbPath);
+        }
+        public IAdb Clone(string externalAdbPath = null)
+        {
+            var clonedAdb = new Adb();
+
+            return clonedAdb;
+        }
+        #region IAdb
+        public IAdbTargeted SingleDevice
+        {
+            get { return new Adb(this, "-d"); }
+        }
+
+        public IAdbTargeted SingleEmulator
+        {
+            get { return new Adb(this, "-e"); }
+        }
+
+        public IAdbTargeted Target(string id)
+        {
+            return new Adb(this, "-s \"{0}\"", id);
+        }
+        #endregion
+
+        #region IAdbTargeted
+
+        public IShell Shell
+        {
+            get
+            {
+                return new Adb(this, "shell");
+            }
+        }
+
+        public async Task Backup(BackupOptions options = BackupOptions.None, IEnumerable<string> packages = null, string backupFile = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            string fileString = backupFile != null ? string.Format("-f {0}", backupFile.QuoteIfNeeded()) : "";
+            string packagesString = "";
+            if (packages != null)
+            {
+                packagesString = packages.Aggregate("", (acc, p) => acc + " " + p);
+            }
+
+            await new Adb(this, "backup {0} {1} {2}", fileString, options.GenerateString(), packagesString).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+        }
+
+        public async Task<bool> ConnectWiFiDevice(IPAddress ipAdress, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            try
+            {
+                var lines = (await new Adb(this, "connect {0}", ipAdress.ToString()).RunAsync(cancellationToken: cancellationToken)).ToLines().ToList();
+
+                if (!lines.Any() || lines.First().Contains("unable"))
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch (NonZeroExitCodeException)
+            {
+                return false;
+            }
+        }
+
+        public async Task<IEnumerable<IDeviceInfo>> GetDevices(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var lines = (await new Adb(this, "devices").RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false)).ToLines().ToList();
+            if (!lines.Any())
+            {
+                return new List<IDeviceInfo>();
+            }
+            lines.RemoveRange(0, 1);
+            return lines.Select(l => new AdbDeviceInfo(l));
+        }
+
+        public async Task<string> GetScreenshot(string file, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await new Adb(this, "shell screencap -p \"{0}\"", file).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<AdbState> GetState(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var lines = (await new Adb(this, "get-state").RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false)).ToLines().ToList();
+
+            if (!lines.Any())
+                return AdbState.Unknown;
+            if (lines.Contains("device"))
+                return AdbState.Device;
+            else if (lines.Contains("offline"))
+                return AdbState.Offline;
+            else if (lines.Contains("bootloader"))
+                return AdbState.Bootloader;
+            else return AdbState.Unknown;
+        }
+
+        public async Task<string> Install(string apkPath, InstallOptions options = InstallOptions.None, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            int timeout = GetTimeoutByFileSize(apkPath);
+            var output = await new Adb(this, "install {0} {1}", options.GenerateString(), apkPath.ExceptionQuoteIfNeeded())
+                .RunAsync(timeout, cancellationToken: cancellationToken).ConfigureAwait(false);
+            if (!output.Contains("Error:") && !output.Contains("Failure"))
+            {
+                return InstallationResult.Success;
+            }
+            else
+            {
+                try
+                {
+                    var lines = output.ToLines();
+                    string failureLine = lines.FirstOrDefault(l => l.Contains("Failure"));
+                    if (failureLine == null)
+                        return InstallationResult.InstallParseFailedUnexpectedException;
+                    int length = "Failure".Length;
+                    failureLine = failureLine.Substring(length, failureLine.Length - length).Trim(' ', '[', ']');
+
+                    return failureLine;
+
+                }
+                catch (Exception)
+                {
+                    return InstallationResult.InstallParseFailedUnexpectedException;
+                }
+            }
+        }
+
+        public IObservable<string> Logcat(LogcatOptions options = LogcatOptions.None,
+            LogOutputFormat format = LogOutputFormat.Brief,
+            CancellationToken cancellationToken = default(CancellationToken), params LogFilter[] filters)
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+            {
+                string formatString = format == LogOutputFormat.Brief ? string.Empty : string.Format("-v {0}", format.ToString().ToLower());
+                string filtersString = filters.Aggregate("", (acc, f) => acc + " " + f.ToString());
+                var process = new Adb(this, "logcat {0} {1} {2}", options.GenerateString(), formatString, filtersString).CreateProcess(AdbExecutablePath, cts, 0, false);
+                process.RunAsync(cts.Token);
+                return process.Output;
+            }
+        }
+        public async Task<string> Pull(string remotePath, string localPath, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await new Adb(this, "pull \"{0}\" \"{1}\"", remotePath, localPath).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<string> Push(string localPath, string remotePath, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await new Adb(this, "push {0} {1}", localPath.QuoteIfNeeded(), remotePath.QuoteIfNeeded()).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task Restore(string backupFile, Action<string> outputHandler, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+            {
+                var process = new Adb(this, "restore {0}", backupFile.QuoteIfNeeded()).CreateProcess(AdbExecutablePath, cts, 0, false);
+                IDisposable subscription = null;
+                if (outputHandler != null)
+                {
+                    subscription = process.Output.Subscribe(outputHandler);
+                }
+                await process.RunAsync(cancellationToken);
+                if (subscription != null)
+                {
+                    subscription.Dispose();
+                }
+            }
+        }
+
+        public async Task StartServer(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await new Adb(new Adb(), "start-server").RunAsync(0, cancellationToken);
+        }
+
+        public async Task StopServer(IProcessManager processManager, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await new Adb(new Adb(), "kill-server").RunAsync(0, cancellationToken);
+        }
+
+        public async Task<string> Version(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await new Adb(this, "version").RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+        private int GetTimeoutByFileSize(string apkPath)
+        {
+            var fileInfo = new FileInfo(apkPath);
+            if (fileInfo.Exists)
+            {
+                long dataSize = new FileInfo(apkPath).Length;
+                int m10Size = (int)Math.Ceiling(dataSize / (1024.0 * 1024.0 * 10));
+
+                return m10Size * 60000;
+            }
+            return 10 * 60000;
+        }
+        #endregion
+
+        #region Tools
+        private static string IgnoreDaemonRestarting(List<string> lines)
+        {
+            if (lines.Count > 2
+                && (lines[0].StartsWith("* daemon not running. starting it now on port")
+                    || lines[0].StartsWith("adb server is out of date.  killing..."))
+                && lines[1].Equals("* daemon started successfully *"))
+            {
+                lines.RemoveRange(0, 2);
+            }
+            return lines.FromLines();
+        }
+
+        private IProcess CreateProcess(string adbPath, CancellationTokenSource cts, int timeout = 1000 * 60 * 10, bool cacheOutput = true)
+        {
+            string commands = AdbCommandBuilder.ToString().Trim();
+            var processManager = _processManager ?? new ProcessManager();
+            var process = processManager.CreateProcess(adbPath, commands);
+            process.Output.Buffer(TimeSpan.FromSeconds(1)).Subscribe(
+                outputChunk =>
+                {
+                    if (outputChunk.Any(s => s.Contains("error: device not found")))
+                        cts.Cancel();
+                });
+
+            if (timeout != 0)
+            {
+                cts.CancelAfter(timeout);
+            }
+            if (cacheOutput)
+            {
+                process = process.WithOutputCache();
+            }
+            return process;
+        }
+
+        private string GetUserString(InUser? user)
+        {
+            return user.HasValue ? user.ToString() : "";
+        }
+        private async Task<string> RunAsync(int timeout = 1000 * 60 * 10, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+            {
+                var result = await CreateProcess(AdbExecutablePath, cts, timeout).RunAsync(cts.Token).ConfigureAwait(false);
+
+                if (result.Process.ExitCode != 0)
+                {
+                    throw new NonZeroExitCodeException(result.Process.ExitCode, result.Process.StartInfo, result.Output.FromLines());
+                }
+
+                return IgnoreDaemonRestarting(result.Output.ToList());
+            }
+        }
+        #endregion
     }
 }
