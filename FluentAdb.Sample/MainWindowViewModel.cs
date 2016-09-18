@@ -30,7 +30,7 @@ namespace FluentAdb.Sample
             InstallCommand = new AsyncCommand(async () => await InstallApp(), CancellationToken.None);
             try
             {
-                _adb = Adb.Get("..\\..\\..\\adb\\adb.exe");
+                _adb = Adb.New("..\\..\\..\\adb\\adb.exe");
             }
             catch (AdbException ex)
             {

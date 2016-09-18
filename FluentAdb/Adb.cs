@@ -121,12 +121,12 @@ namespace FluentAdb
         /// Get new adb instance
         /// </summary>
         /// <returns></returns>
-        public static IAdb Get()
+        public static IAdb New()
         {
             return new Adb();
         }
 
-        public static IAdb Get(string adbPath)
+        public static IAdb New(string adbPath)
         {
             return new Adb(adbPath);
         }
@@ -361,6 +361,7 @@ namespace FluentAdb
         {
             return user.HasValue ? user.ToString() : "";
         }
+
         private async Task<string> RunAsync(int timeout = 1000 * 60 * 10, CancellationToken cancellationToken = default(CancellationToken))
         {
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))

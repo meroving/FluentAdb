@@ -22,7 +22,7 @@ namespace FluentAdb
             return !output.Contains("Error:");
         }
 
-        public async Task StartService(Intent intent, InUser? user = null, bool log = true, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task StartService(Intent intent, InUser? user = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user.HasValue && user.Value.Equals(InUser.All))
                 throw new InvalidOperationException("User parameter can't be All");

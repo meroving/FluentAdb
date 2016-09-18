@@ -7,8 +7,16 @@ namespace FluentAdb.Interfaces
 {
     public interface IShell
     {
+        /// <summary>
+        /// Query activity manager
+        /// </summary>
         IActivityManager ActivityManager { get; }
+
+        /// <summary>
+        /// Query package manager
+        /// </summary>
         IPackageManager PackageManager { get; }
+
         IDumpSys DumpSys { get; }
         Task<string> GetProperty(string property, CancellationToken cancellationToken = default(CancellationToken));
         Task<Dictionary<string, string>> GetAllProperties(CancellationToken cancellationToken = default(CancellationToken));

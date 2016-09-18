@@ -5,11 +5,34 @@ namespace FluentAdb.Enums
     [Flags]
     public enum PermissionListOptions
     {
+        /// <summary>
+        /// None
+        /// </summary>
         None = 0x0,
+
+        /// <summary>
+        /// Organize by group.
+        /// </summary>
         OrganizeByGroup = 0x1,
+
+        /// <summary>
+        /// Get all infromation.
+        /// </summary>
         AllInformation = 0x2,
+
+        /// <summary>
+        /// Short summary.
+        /// </summary>
         Summary = 0x4,
+
+        /// <summary>
+        /// Only list dangerous permissions.
+        /// </summary>
         OnlyDangerous = 0x8,
+
+        /// <summary>
+        /// List only the permissions users will see.
+        /// </summary>
         UsersVisible = 0x10,
     }
 

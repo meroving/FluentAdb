@@ -5,13 +5,44 @@ namespace FluentAdb.Enums
     [Flags]
     public enum PackageListOptions
     {
+        /// <summary>
+        /// None
+        /// </summary>
         None = 0x0,
+
+        /// <summary>
+        /// Get packages associated file
+        /// </summary>
         AssociatedFile = 0x1,
+
+        /// <summary>
+        /// Filter to only show disabled packages
+        /// </summary>
         OnlyDisabled = 0x2,
+
+        /// <summary>
+        /// Filter to only show enabled packages.
+        /// </summary>
         OnlyEnabled = 0x4,
+
+        /// <summary>
+        /// Filter to only show system packages.
+        /// </summary>
         OnlySystem = 0x8,
+
+        /// <summary>
+        /// Filter to only show third party packages.
+        /// </summary>
         OnlyThirdparty = 0x10,
+
+        /// <summary>
+        /// Get the installer for the packages.
+        /// </summary>
         Installer = 0x20,
+
+        /// <summary>
+        /// Also include uninstalled packages.
+        /// </summary>
         Uninstalled = 0x40
     }
 

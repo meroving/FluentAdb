@@ -5,7 +5,14 @@ namespace FluentAdb.Enums
     [Flags]
     public enum UninstallOptions
     {
+        /// <summary>
+        /// None
+        /// </summary>
         None = 0x0,
+
+        /// <summary>
+        /// Keep the data and cache directories around after package removal.
+        /// </summary>
         KeepData = 0x1,
     }
 
