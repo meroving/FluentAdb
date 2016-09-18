@@ -25,7 +25,7 @@ namespace FluentAdb.Interfaces
         Task<IEnumerable<string>> GetPermissionGroups(CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
-        /// Get all known permissions, optionally only those in <paramref name="group"/>
+        /// Get all known permissions, optionally only those in  group
         /// </summary>
         /// <param name="options">Options</param>
         /// <param name="group">Permissions group</param>
@@ -41,7 +41,7 @@ namespace FluentAdb.Interfaces
         Task<IEnumerable<OutUser>> GetUsers(CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
-        /// Get the path to the APK of the given <paramref name="package"/>
+        /// Get the path to the APK of the given package
         /// </summary>
         /// <param name="package"></param>
         /// <param name="cancellationToken"></param>
@@ -49,7 +49,7 @@ namespace FluentAdb.Interfaces
         Task<string> GetPath(string package, CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
-        /// Installs a package (specified by <paramref name="path"/>) to the system.
+        /// Installs a package (specified by path) to the system.
         /// </summary>
         /// <param name="path">Package path</param>
         /// <param name="options">Options</param>
@@ -58,7 +58,7 @@ namespace FluentAdb.Interfaces
         Task<string> Install(string path, InstallOptions options = InstallOptions.None, CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
-        /// Removes a <paramref name="package"/> from the system.
+        /// Removes a package from the system.
         /// </summary>
         /// <param name="package">Application package</param>
         /// <param name="options">Options</param>
@@ -67,7 +67,7 @@ namespace FluentAdb.Interfaces
         Task Uninstall(string package, UninstallOptions options = UninstallOptions.None, CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
-        /// Deletes all data associated with a <paramref name="package"/>.
+        /// Deletes all data associated with a package.
         /// </summary>
         /// <param name="package">Application package</param>
         /// <param name="cancellationToken"></param>
@@ -150,7 +150,7 @@ namespace FluentAdb.Interfaces
         Task TrimCaches(int freeSpace, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Create a new user with the given <paramref name="userName"/>, printing the new user identifier of the user.
+        /// Create a new user with the given userName, printing the new user identifier of the user.
         /// </summary>
         /// <param name="userName">User name</param>
         /// <param name="cancellationToken"></param>
@@ -158,7 +158,7 @@ namespace FluentAdb.Interfaces
         Task CreateUser(string userName, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Remove the user with the given <paramref name="userId"/>, deleting all data associated with that user
+        /// Remove the user with the given userId, deleting all data associated with that user
         /// </summary>
         /// <param name="userId">User identificator</param>
         /// <param name="cancellationToken"></param>
