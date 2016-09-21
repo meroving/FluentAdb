@@ -47,15 +47,16 @@ namespace FluentAdb.Interfaces
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<string> GetPath(string package, CancellationToken cancellationToken = default(CancellationToken));
-        
+
         /// <summary>
         /// Installs a package (specified by path) to the system.
         /// </summary>
         /// <param name="path">Package path</param>
         /// <param name="options">Options</param>
+        /// <param name="installer">Installer for apk</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<string> Install(string path, InstallOptions options = InstallOptions.None, CancellationToken cancellationToken = default(CancellationToken));
+        Task<string> Install(string path, InstallOptions options = InstallOptions.None, string installer = null, CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
         /// Removes a package from the system.

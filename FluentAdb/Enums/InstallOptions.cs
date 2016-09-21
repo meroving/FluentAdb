@@ -29,6 +29,22 @@ namespace FluentAdb.Enums
         /// Install package on the internal system memory.
         /// </summary>
         InstallToInternal = 0x8,
+
+        /// <summary>
+        /// Allow version code downgrade.
+        /// </summary>
+        AllowDowngrade = 0x10,
+
+        /// <summary>
+        /// Grant all permissions listed in the app manifest.
+        /// </summary>
+        GrantAllPermissions = 0x20,
+
+        /// <summary>
+        /// Allow test APKs to be installed.
+        /// </summary>
+        AllowTestAPKs = 0x40,
+
     }
 
     public static class InstallOptionsEx
@@ -44,6 +60,12 @@ namespace FluentAdb.Enums
                 optionsString += " -s";
             if ((options & InstallOptions.InstallToInternal) != 0)
                 optionsString += " -f";
+            if ((options & InstallOptions.AllowDowngrade) != 0)
+                optionsString += " -d";
+            if ((options & InstallOptions.GrantAllPermissions) != 0)
+                optionsString += " -g";
+            if ((options & InstallOptions.AllowTestAPKs) != 0)
+                optionsString += " -t";
 
             return optionsString;
         }

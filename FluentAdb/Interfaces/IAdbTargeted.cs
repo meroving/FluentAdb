@@ -20,7 +20,7 @@ namespace FluentAdb.Interfaces
         /// <param name="options">Installtion options</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Installation result string</returns>
-        Task<string> Install(string apkPath, InstallOptions options = InstallOptions.None, CancellationToken cancellationToken = default(CancellationToken));
+        Task<string> Install(string apkPath, InstallOptions options = InstallOptions.None, string installer = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Copies a specified file from an emulator/device instance to computer.

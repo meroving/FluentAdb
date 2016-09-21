@@ -109,12 +109,12 @@ namespace FluentAdb.Sample
             }
 
             OpenFileDialog ofd = new OpenFileDialog { Filter = "Apk files|*.apk" };
-            
+
             if (ofd.ShowDialog() == true)
             {
                 var apkFilePath = ofd.FileName;
                 var installationResult =
-                    await _deviceAdb.Install(apkFilePath, InstallOptions.ReinstallKeepingData, cancellationToken);
+                    await _deviceAdb.Install(apkFilePath, InstallOptions.ReinstallKeepingData, cancellationToken: cancellationToken);
                 if (installationResult == InstallationResult.Success)
                 {
                     MessageBox.Show("Application installed successfully");

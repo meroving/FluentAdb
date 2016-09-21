@@ -220,10 +220,16 @@ namespace FluentAdb
             else return AdbState.Unknown;
         }
 
-        public async Task<string> Install(string apkPath, InstallOptions options = InstallOptions.None, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<string> Install(string apkPath, InstallOptions options = InstallOptions.None, string installer = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             int timeout = GetTimeoutByFileSize(apkPath);
-            var output = await new Adb(this, "install {0} {1}", options.GenerateString(), apkPath.ExceptionQuoteIfNeeded())
+            string installString = "install";
+            if (installer != null)
+            {
+                installString += " -i " + installer.QuoteIfNeeded();
+            }
+
+            var output = await new Adb(this, installString + " {0} {1}", options.GenerateString(), apkPath.ExceptionQuoteIfNeeded())
                 .RunAsync(timeout, cancellationToken: cancellationToken).ConfigureAwait(false);
             if (!output.Contains("Error:") && !output.Contains("Failure"))
             {

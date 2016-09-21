@@ -78,6 +78,21 @@ namespace FluentAdb.Tests
             processManager.Stub.AssertWasCalled(_ => _.CreateProcess(Arg<string>.Is.Anything, Arg<string>.Matches(c => c.Contains(expected))));
         }
 
+        public async Task InstallWithInstaller()
+        {
+            // arrange
+            var processManager = new TestProcessManager();
+            processManager.AddProcess(new[] { "Success" });
+            var adb = new Adb(processManager);
+
+            // act
+            var deviceAdb = adb.SingleDevice;
+            await deviceAdb.Install("test.apk", InstallOptions.None, "com.android.vending");
+
+            // assert
+            processManager.Stub.AssertWasCalled(_ => _.CreateProcess(Arg<string>.Is.Anything, Arg<string>.Matches(c => c.Contains("-i com.android.vending"))));
+        }
+
         [TestCase("Success", "SUCCESS")]
         [TestCase("Failure", "")]
         [TestCase("Error:", "INSTALL_PARSE_FAILED_UNEXPECTED_EXCEPTION")]
