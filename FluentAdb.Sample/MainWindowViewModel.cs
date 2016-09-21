@@ -69,6 +69,7 @@ namespace FluentAdb.Sample
 
         private async Task Connect(CancellationToken cancellationToken = default(CancellationToken))
         {
+            Logcat.Add(item: await _adb.Version(cancellationToken));
             var devices = await _adb.GetDevices(cancellationToken);
             var deviceInfo = devices.FirstOrDefault(d => d.State == DeviceState.Online);
             if (deviceInfo == null)
@@ -88,16 +89,16 @@ namespace FluentAdb.Sample
                 Parameters.Add(new Parameter(kv.Key, kv.Value));
             }
 
-            _deviceAdb.Logcat()
-                .Buffer(TimeSpan.FromSeconds(3))
-                .ObserveOnDispatcher()
-                .Subscribe(log =>
-                {
-                    foreach (var l in log)
-                    {
-                        Logcat.Insert(0, l);
-                    }
-                });
+            //_deviceAdb.Logcat()
+            //    .Buffer(TimeSpan.FromSeconds(3))
+            //    .ObserveOnDispatcher()
+            //    .Subscribe(log =>
+            //    {
+            //        foreach (var l in log)
+            //        {
+            //            Logcat.Insert(0, l);
+            //        }
+            //    });
         }
 
         private async Task InstallApp(CancellationToken cancellationToken = default(CancellationToken))

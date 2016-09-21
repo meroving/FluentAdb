@@ -119,5 +119,90 @@ namespace FluentAdb.Tests
             // assert
             processManager.Stub.AssertWasCalled(_ => _.CreateProcess(Arg<string>.Is.Anything, Arg<string>.Matches(c => c.Contains(expected))));
         }
+
+        [Test]
+        public async Task SuccessPullResult()
+        {
+            // arrange
+            var processManager = new TestProcessManager();
+            processManager.AddProcess(new[] { "[100%] /mnt/sdcard/Log.txt" });
+            var adb = new Adb(processManager);
+
+            // act
+            var deviceAdb = adb.SingleDevice;
+            var result = await deviceAdb.Pull("/mnt/sdcard/", "Log.txt");
+
+            // assert
+            Assert.IsTrue(result.Success);
+            Assert.IsNull(result.Error);
+        }
+
+        [Test]
+        public async Task FailPullResult()
+        {
+            // arrange
+            var processManager = new TestProcessManager();
+            processManager.AddProcess(new[] { "adb: error: remote object '/mnt/sdcard/Log2.txt' does not exist" });
+            var adb = new Adb(processManager);
+
+            // act
+            var deviceAdb = adb.SingleDevice;
+            var result = await deviceAdb.Pull("/mnt/sdcard/", "Log.txt");
+
+            // assert
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual("remote object '/mnt/sdcard/Log2.txt' does not exist", result.Error);
+        }
+
+        [Test]
+        public async Task SuccessPushResult()
+        {
+            // arrange
+            var processManager = new TestProcessManager();
+            processManager.AddProcess(new[] { "[100%] /mnt/sdcard/Log.txt" });
+            var adb = new Adb(processManager);
+
+            // act
+            var deviceAdb = adb.SingleDevice;
+            var result = await deviceAdb.Push("Log.txt","/mnt/sdcard/");
+
+            // assert
+            Assert.IsTrue(result.Success);
+            Assert.IsNull(result.Error);
+        }
+
+        [Test]
+        public async Task FailPushResult()
+        {
+            // arrange
+            var processManager = new TestProcessManager();
+            processManager.AddProcess(new[] { "adb: error: failed to copy 'Log.txt' to '/mnt/sdcard2/Log.txt': Permission denied" });
+            var adb = new Adb(processManager);
+
+            // act
+            var deviceAdb = adb.SingleDevice;
+            var result = await deviceAdb.Pull("/mnt/sdcard/", "Log.txt");
+
+            // assert
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual("Permission denied", result.Error);
+        }
+
+        [Test]
+        public async Task FailPushResult2()
+        {
+            // arrange
+            var processManager = new TestProcessManager();
+            processManager.AddProcess(new[] { "adb: error: failed to copy 'Log.txt' to '/mnt/rtyrtyurt': Read-only file system" });
+            var adb = new Adb(processManager);
+
+            // act
+            var deviceAdb = adb.SingleDevice;
+            var result = await deviceAdb.Pull("/mnt/rtyrtyurt", "Log.txt");
+
+            // assert
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual("Read-only file system", result.Error);
+        }
     }
 }

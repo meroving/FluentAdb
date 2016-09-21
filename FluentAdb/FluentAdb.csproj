@@ -81,6 +81,7 @@
     <Compile Include="Interfaces\IPackageManager.cs" />
     <Compile Include="Interfaces\IShell.cs" />
     <Compile Include="InUser.cs" />
+    <Compile Include="IOResult.cs" />
     <Compile Include="NonZeroExitCodeException.cs" />
     <Compile Include="OutUser.cs" />
     <Compile Include="Process\IProcess.cs" />

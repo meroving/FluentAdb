@@ -264,14 +264,16 @@ namespace FluentAdb
             }
         }
 
-        public async Task<string> Pull(string remotePath, string localPath, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IOResult> Pull(string remotePath, string localPath, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await new Adb(this, "pull \"{0}\" \"{1}\"", remotePath, localPath).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            var output = await new Adb(this, "pull \"{0}\" \"{1}\"", remotePath, localPath).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return GetIOResultFromOutput(output);
         }
 
-        public async Task<string> Push(string localPath, string remotePath, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IOResult> Push(string localPath, string remotePath, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await new Adb(this, "push {0} {1}", localPath.QuoteIfNeeded(), remotePath.QuoteIfNeeded()).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            var output = await new Adb(this, "push {0} {1}", localPath.QuoteIfNeeded(), remotePath.QuoteIfNeeded()).RunAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return GetIOResultFromOutput(output);
         }
 
         public async Task Restore(string backupFile, Action<string> outputHandler, CancellationToken cancellationToken = default(CancellationToken))
@@ -361,6 +363,19 @@ namespace FluentAdb
         {
             return user.HasValue ? user.ToString() : "";
         }
+
+        private static IOResult GetIOResultFromOutput(string resultString)
+        {
+            var resultStrings = resultString.ToLines();
+            var errorString = resultStrings.FirstOrDefault(s => s.Contains("error"));
+            if (errorString == null)
+            {
+                return new IOResult { Success = true };
+            }
+            var error = errorString.Split(':').Last().Trim();
+            return new IOResult { Success = false, Error = error };
+        }
+
 
         private async Task<string> RunAsync(int timeout = 1000 * 60 * 10, CancellationToken cancellationToken = default(CancellationToken))
         {

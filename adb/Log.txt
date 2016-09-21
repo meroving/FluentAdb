@@ -1,0 +1,127 @@
+21 сен 2016 20:18:12.0042 Start
+21 сен 2016 20:18:12.0102 8 Version: 3.255.0.0
+21 сен 2016 20:18:13.2410 8 Component Yandex.RetailApp.AdminConfigurator.Hosts.HostsFile is instantiated
+21 сен 2016 20:18:13.2430 8 Component Yandex.RetailApp.AdminConfigurator.IO.AdminFileSystem is instantiated
+21 сен 2016 20:18:13.2440 8 Component Yandex.RetailApp.AdminConfigurator.News.RetailNewsFile is instantiated
+21 сен 2016 20:18:13.2460 8 Component Yandex.RetailApp.AdminConfigurator.News.AdminNewsHolder is instantiated
+21 сен 2016 20:18:13.2490 8 Refresh news
+21 сен 2016 20:18:13.2520 8 Load news info from: C:\ProgramData\AndroidConfigurationAdmin\content\RetailNews.json
+21 сен 2016 20:18:13.4241 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.NewsListViewModel is instantiated
+21 сен 2016 20:18:13.4261 8 Component Yandex.RetailApp.Util.Downloading.ConfigurationPathBuilder is instantiated
+21 сен 2016 20:18:13.4261 8 Component Yandex.RetailApp.Util.Net.StatisticStatisticWeb is instantiated
+21 сен 2016 20:18:13.4271 8 Component Yandex.RetailApp.Util.Registry.RegistryWrap is instantiated
+21 сен 2016 20:18:13.4411 8 Component Yandex.RetailApp.Web.WebBase is instantiated
+21 сен 2016 20:18:13.6193 8 Component Yandex.RetailApp.Core.Configurations.PromoAppsAndroidConfiguration is instantiated
+21 сен 2016 20:18:13.6213 8 Component Yandex.RetailApp.Core.Configurations.ConfigurationItemFile.AndroidOptionalFileProvider is instantiated
+21 сен 2016 20:18:13.6313 8 Component Yandex.RetailApp.Core.Configurations.ConfigurationItemFile.AndroidMandatoryFileProvider is instantiated
+21 сен 2016 20:18:13.6353 8 Component Yandex.RetailApp.Core.Configurations.ConfigurationItemFile.AndroidPromoAppsFileProvider is instantiated
+21 сен 2016 20:18:13.6373 8 Component Yandex.RetailApp.Core.Configurations.ConfigurationItemFile.AndroidPaidAppsFileProvider is instantiated
+21 сен 2016 20:18:13.6393 8 Component Yandex.RetailApp.Core.Configurations.ConfigurationItemFile.Mp3FileProvider is instantiated
+21 сен 2016 20:18:13.6413 8 Component Yandex.RetailApp.Core.Configurations.ConfigurationItemFile.WindowsFileProvider is instantiated
+21 сен 2016 20:18:13.6433 8 Component Yandex.RetailApp.Core.Configurations.MandatoryConfiguration is instantiated
+21 сен 2016 20:18:13.6453 8 Component Yandex.RetailApp.Core.Configurations.OptionalAndroidConfiguration is instantiated
+21 сен 2016 20:18:13.6473 8 Component Yandex.RetailApp.Core.Icons.IconProvider is instantiated
+21 сен 2016 20:18:13.6703 8 Component Yandex.RetailApp.Core.Server.BackendSchemasMapperProfile is instantiated
+21 сен 2016 20:18:13.6733 8 Component AddappterAdmin.RetailPartner is instantiated
+21 сен 2016 20:18:13.6763 8 >> Retailer info
+21 сен 2016 20:18:13.6813 8   Disk: https://webdav.yandex.ru/AutoTests/Meroving/MTSSmall/
+21 сен 2016 20:18:13.6833 8   Login: mpavlovnaconfigurationapp@yandex.ru
+21 сен 2016 20:18:13.6843 8   Credentials are production: False
+21 сен 2016 20:18:13.6853 8   Environment: Testing
+21 сен 2016 20:18:13.6863 8   Statistic: Testing
+21 сен 2016 20:18:13.6873 8   Rey Backend: Development
+21 сен 2016 20:18:13.6883 8   Store: Production
+21 сен 2016 20:18:13.6903 8   Warning: Testing
+21 сен 2016 20:18:13.6923 8 << Retailer info
+21 сен 2016 20:18:13.6933 8 Component Yandex.RetailApp.Util.RetailPartner.RetailPartnerLogWriter is instantiated
+21 сен 2016 20:18:13.6943 8 Component Yandex.RetailApp.Util.Processes.ProcessManager is instantiated
+21 сен 2016 20:18:13.6953 8 Component Yandex.RetailApp.Util.Windows.MessageBox2 is instantiated
+21 сен 2016 20:18:13.6963 8 Component Yandex.RetailApp.Util.OS.OsInfo is instantiated
+21 сен 2016 20:18:13.6973 8 Component Yandex.RetailApp.Util.Threading.AsyncManager is instantiated
+21 сен 2016 20:18:13.6983 8 Component Yandex.RetailApp.Util.Windows.WindowsManager is instantiated
+21 сен 2016 20:18:13.7023 8 Component Yandex.RetailApp.Util.Downloading.YaDiskAsyncDownloader is instantiated
+21 сен 2016 20:18:13.7033 8 Component Yandex.RetailApp.AdminConfigurator.Downloading.YaDiskSettingsAsyncDownloader is instantiated
+21 сен 2016 20:18:13.8214 8 Component Yandex.RetailApp.AdminConfigurator.Hosts.HostsFilterHolder is instantiated
+21 сен 2016 20:18:13.8264 8 Component Yandex.RetailApp.AdminConfigurator.OfflineGenerator is instantiated
+21 сен 2016 20:18:13.8374 8 Component Yandex.RetailApp.AdminConfigurator.Store.Ios.IosStore is instantiated
+21 сен 2016 20:18:13.8384 8 Component Yandex.RetailApp.AdminConfigurator.Uploading.YaDiskAsyncRemoteStorage is instantiated
+21 сен 2016 20:18:13.8404 8 Component Yandex.RetailApp.Util.FeedbackReporting.DefaultFeedbackEmailInfoProvider is instantiated
+21 сен 2016 20:18:13.8644 8 Component Yandex.RetailApp.Util.Metrica.MetricaManager is instantiated
+21 сен 2016 20:18:13.8654 8 Component Yandex.RetailApp.Util.Metrica.UIMetricaProvider is instantiated
+21 сен 2016 20:18:13.8674 8 Component Yandex.RetailApp.Core.Configurations.Helpers.AndroidAppEncryptor is instantiated
+21 сен 2016 20:18:13.8684 8 Component Yandex.RetailApp.Core.Configurations.AdminDevicesConfiguration is instantiated
+21 сен 2016 20:18:13.8694 8 Component Yandex.RetailApp.Core.Configurations.OptionalWindowsConfiguration is instantiated
+21 сен 2016 20:18:13.9095 8 Component Yandex.RetailApp.Core.Server.Backend is instantiated
+21 сен 2016 20:18:13.9115 8 Component Yandex.RetailApp.AdbSDK.Adb is instantiated
+21 сен 2016 20:18:13.9275 8 Component Yandex.RetailApp.AdminConfigurator.Store.Windows.WindowsStore is instantiated
+21 сен 2016 20:18:13.9295 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.Devices.DevicesListViewModel is instantiated
+21 сен 2016 20:18:13.9605 8 Component Yandex.RetailApp.Core.Configurations.AndroidPaidAppsConfiguration is instantiated
+21 сен 2016 20:18:13.9625 8 Component Yandex.RetailApp.Core.Configurations.OptionalIosConfiguration is instantiated
+21 сен 2016 20:18:13.9715 8 Component Yandex.RetailApp.AdminConfigurator.Configurations.ConfigurationItemsFinder is instantiated
+21 сен 2016 20:18:14.0045 8 Retrieving Yandex.Store settings...
+21 сен 2016 20:18:14.0135 8 Downloading v3/yastorefilter.xml file to C:\Users\meroving\AppData\Local\Temp\tmpCA8E.tmp
+21 сен 2016 20:18:14.4378 8 Component Yandex.RetailApp.AdminConfigurator.Store.Yandex.YandexStore is instantiated
+21 сен 2016 20:18:14.4598 8 Component Yandex.RetailApp.Core.Configurations.ConfigurationManager is instantiated
+21 сен 2016 20:18:14.4618 8 Component Yandex.RetailApp.AdminConfigurator.Store.StoresUpdater is instantiated
+21 сен 2016 20:18:14.4628 9 Load news info from: C:\ProgramData\AndroidConfigurationAdmin\content\RetailNews.json
+21 сен 2016 20:18:14.4668 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.ConfigurationItemsList.Android.PaidAppsListViewModel is instantiated
+21 сен 2016 20:18:14.4688 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.ConfigurationItemsList.iOS.IosConfiguratonListViewModel is instantiated
+21 сен 2016 20:18:14.4708 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.ConfigurationItemsList.Android.AndroidPromoAppsListViewModel is instantiated
+21 сен 2016 20:18:14.4718 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.ConfigurationItemsList.Windows.OptionalWindowsListViewModel is instantiated
+21 сен 2016 20:18:14.4738 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.ConfigurationItemsList.Android.MandatoryAndroidListViewModel is instantiated
+21 сен 2016 20:18:14.4758 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.ConfigurationItemsList.Android.OptionalAndroidListViewModel is instantiated
+21 сен 2016 20:18:14.4778 8 Component Yandex.RetailApp.AdminConfigurator.GenresCache is instantiated
+21 сен 2016 20:18:14.9562 8 Component Yandex.RetailApp.AdminConfigurator.AdminMainWindowManager is instantiated
+21 сен 2016 20:18:14.9642 8 Component Yandex.RetailApp.AdminConfigurator.ViewModels.AdminMainWindowCommandsRegistrar is instantiated
+21 сен 2016 20:18:15.0272 8 Comparing v3/POS/voc.json file with C:\ProgramData\AndroidConfigurationAdmin\content\POS\voc.json
+21 сен 2016 20:18:15.0372 8 Component Yandex.RetailApp.AdminConfigurator.DownloadSyncOnStartManager is instantiated
+21 сен 2016 20:18:15.2073 8 Downloading v3/POS/voc.json file to C:\Users\meroving\AppData\Local\Temp\tmpCF43.tmp
+21 сен 2016 20:18:15.8088 8 Downloading v3/Configuration.xml file to C:\ProgramData\AndroidConfigurationAdmin\ContentUpdate\Configuration.xml
+21 сен 2016 20:18:34.4685 9 Load configuration from: C:\ProgramData\AndroidConfigurationAdmin\content\ConfigurationPromo.xml
+21 сен 2016 20:18:34.4725 11 Load configuration from: C:\ProgramData\AndroidConfigurationAdmin\content\ConfigurationXap.xml
+21 сен 2016 20:18:34.4725 10 Load configuration from: C:\ProgramData\AndroidConfigurationAdmin\content\Paid.xml
+21 сен 2016 20:18:34.4725 18 Load configuration from: C:\ProgramData\AndroidConfigurationAdmin\content\Devices.xml
+21 сен 2016 20:18:34.4755 20 Load configuration from: C:\ProgramData\AndroidConfigurationAdmin\content\Configuration.xml
+21 сен 2016 20:18:34.6036 9 Load configuration from: C:\ProgramData\AndroidConfigurationAdmin\content\Retail.xml
+21 сен 2016 20:18:37.8518 8 Load configuration from: C:\ProgramData\AndroidConfigurationAdmin\ContentUpdate\Configuration.xml
+21 сен 2016 20:18:39.4009 8 Downloading v3/Retail.xml file to C:\ProgramData\AndroidConfigurationAdmin\ContentUpdate\Retail.xml
+21 сен 2016 20:18:39.5369 25 Cant find item on windows store
+21 сен 2016 20:18:39.5409 23 Cant find item on windows store
+21 сен 2016 20:18:39.9122 25 Cant find item on windows store
+21 сен 2016 20:18:39.9823 19 Cant find item on windows store
+21 сен 2016 20:18:40.1193 19 Cant find item on windows store
+21 сен 2016 20:18:40.3375 25 Cant find item on windows store
+21 сен 2016 20:18:40.4035 25 Cant find item on windows store
+21 сен 2016 20:18:40.4496 8 Progress: 0
+21 сен 2016 20:18:40.6647 24 Cant find item on windows store
+21 сен 2016 20:18:40.6767 8 Progress: 4
+21 сен 2016 20:18:40.7148 19 Cant find item on windows store
+21 сен 2016 20:18:40.7878 8 Progress: 8
+21 сен 2016 20:18:40.8819 8 Progress: 12
+21 сен 2016 20:18:40.9219 25 Cant find item on windows store
+21 сен 2016 20:18:40.9829 8 Progress: 16
+21 сен 2016 20:18:40.9979 25 Cant find item on windows store
+21 сен 2016 20:18:41.0900 8 Progress: 20
+21 сен 2016 20:18:41.1921 19 Cant find item on windows store
+21 сен 2016 20:18:41.2161 8 Progress: 24
+21 сен 2016 20:18:41.2691 19 Cant find item on windows store
+21 сен 2016 20:18:41.3182 8 Progress: 28
+21 сен 2016 20:18:41.4152 8 Progress: 32
+21 сен 2016 20:18:41.5403 8 Progress: 36
+21 сен 2016 20:18:41.5853 25 Cant find item on windows store
+21 сен 2016 20:18:41.6294 8 Progress: 40
+21 сен 2016 20:18:41.7184 8 Progress: 44
+21 сен 2016 20:18:41.7975 8 Progress: 48
+21 сен 2016 20:18:41.8755 8 Progress: 52
+21 сен 2016 20:18:41.9956 8 Progress: 56
+21 сен 2016 20:18:42.0747 8 Progress: 60
+21 сен 2016 20:18:42.1597 8 Progress: 64
+21 сен 2016 20:18:42.2418 8 Progress: 68
+21 сен 2016 20:18:42.3389 8 Progress: 72
+21 сен 2016 20:18:42.4189 8 Progress: 76
+21 сен 2016 20:18:42.5030 8 Progress: 80
+21 сен 2016 20:18:42.5800 8 Progress: 84
+21 сен 2016 20:18:42.6371 8 Progress: 88
+21 сен 2016 20:18:42.7101 8 Progress: 92
+21 сен 2016 20:18:42.8112 8 Progress: 96
+21 сен 2016 20:18:43.7518 Stop

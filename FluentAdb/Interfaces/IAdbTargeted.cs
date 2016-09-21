@@ -29,7 +29,7 @@ namespace FluentAdb.Interfaces
         /// <param name="localPath">Path on computer to pull file</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<string> Pull(string remotePath, string localPath, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IOResult> Pull(string remotePath, string localPath, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Copies a specified file from computer to an emulator/device instance.
@@ -38,7 +38,7 @@ namespace FluentAdb.Interfaces
         /// <param name="remotePath">Path on device to push file</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
-        Task<string> Push(string localPath, string remotePath, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IOResult> Push(string localPath, string remotePath, CancellationToken cancellationToken = default(CancellationToken));
         
         /// <summary>
         /// 
