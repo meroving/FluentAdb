@@ -65,6 +65,7 @@
     <Compile Include="Enums\BackupOptions.cs" />
     <Compile Include="Enums\InstallLocation.cs" />
     <Compile Include="Enums\InstallOptions.cs" />
+    <Compile Include="Enums\IntentOptions.cs" />
     <Compile Include="Enums\KeyCode.cs" />
     <Compile Include="Enums\LogcatOptions.cs" />
     <Compile Include="Enums\PackageListOptions.cs" />

@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAdb.Enums;
 using FluentAdb.Util;
 
 namespace FluentAdb
 {
+    /// <summary>
+    /// Abstract description of an operation to be performed
+    /// </summary>
     public class Intent
     {
         private string _action;
@@ -18,6 +22,7 @@ namespace FluentAdb
         private Dictionary<string, int> _integerExtra;
         private Dictionary<string, long> _longExtra;
         private Dictionary<string, float> _floatExtra;
+        private IntentOptions _flags = IntentOptions.FLAG_NONE;
 
         /// <summary>
         /// Create new Intent
@@ -90,6 +95,17 @@ namespace FluentAdb
         public Intent Component(string component)
         {
             _component = component;
+            return this;
+        }
+
+        /// <summary>
+        /// Add flags to the intent
+        /// </summary>
+        /// <param name="flags">Intent flags</param>
+        /// <returns></returns>
+        public Intent Flags(IntentOptions flags)
+        {
+            _flags = flags;
             return this;
         }
 
@@ -196,6 +212,9 @@ namespace FluentAdb
 
             if (_component != null)
                 intent.Add(string.Format("-n {0}", _package != null ? _package + "/." + _component : _component));
+
+            if (_flags != IntentOptions.FLAG_NONE)
+                intent.Add(string.Format("-f {0}", (int)_flags));
 
             if (_stringExtra != null)
                 intent.AddRange(_stringExtra.Select(kv => string.Format("-e {0} {1}", kv.Key, kv.Value)));

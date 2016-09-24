@@ -74,6 +74,7 @@
     <Compile Include="AdbShellTests.cs" />
     <Compile Include="AdbTargetedTests.cs" />
     <Compile Include="AdbTests.cs" />
+    <Compile Include="IntentTests.cs" />
     <Compile Include="Util\AsyncAssert.cs" />
     <Compile Include="BugTests.cs" />
     <Compile Include="Util\TestProcessManager.cs" />
